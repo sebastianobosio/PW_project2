@@ -1,0 +1,54 @@
+body {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo img {
+    height: 150px;
+    width: auto;
+}
+
+header {
+    background-color: #8b4513;
+    color: white;
+    padding: 20px 0px;
+}
+
+header h1 {
+    font-size: 75px;
+}
+
+footer {
+    padding: 5px;
+    background-color: #8b4513;
+    color: white;
+}
+
+.navigation {
+    background-color: #d2b48c;
+    min-height: 100vh;
+}
+
+.navigation .nav-link {
+    padding: 20px 20px;
+    color: black;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.navigation .nav-link:hover {
+    color: #654321;
+    font-weight: 600;
+}
+
+.navigation .nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.main-content {
+    color: white;
+    background-color: #6c5a49;
+}

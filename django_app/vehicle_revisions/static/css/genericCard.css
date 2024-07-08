@@ -1,0 +1,21 @@
+.card {
+    width: 40%;
+    border: 1px solid #8b4513;
+    background-color: #d2b48c;
+    border-radius: 5px;
+    color: #654321;
+}
+
+/* Style for the details button */
+.card button {
+    background-color: #8b4513; /* Brown background */
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.card button:hover {
+    color: white;
+    background-color: #654321; /* Dark brown background on hover */
+}
+

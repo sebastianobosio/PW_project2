@@ -12,7 +12,7 @@ class Vehicle(models.Model):
     number = models.CharField(primary_key=True, max_length=7)
     model = models.CharField(max_length=20, blank=True, null=True)
     brand = models.CharField(max_length=20, blank=True, null=True)
-    prod_date = models.DateField(blank=True, null=True)
+    prod_date = models.DateField(blank=True, db_column='proddate', null=True)
 
     class Meta:
         db_table = 'vehicle'
@@ -21,7 +21,8 @@ class Vehicle(models.Model):
 class Activeplate(models.Model):
     number = models.CharField(primary_key=True, max_length=7)
     emission_date = models.DateField(blank=True, null=True)
-    vehicle_number = models.ForeignKey(Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
+    vehicle_number = models.ForeignKey(
+        Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
 
     class Meta:
         db_table = 'activeplates'
@@ -30,7 +31,8 @@ class Activeplate(models.Model):
 class Inactiveplate(models.Model):
     number = models.CharField(primary_key=True, max_length=7)
     emission_date = models.DateField(blank=True, null=True)
-    vehicle_number = models.ForeignKey(Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
+    vehicle_number = models.ForeignKey(
+        Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
     res_date = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -40,7 +42,8 @@ class Inactiveplate(models.Model):
 class Plate(models.Model):
     number = models.CharField(primary_key=True, max_length=7)
     emission_date = models.DateField(blank=True, null=True)
-    vehicle_number = models.ForeignKey(Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
+    vehicle_number = models.ForeignKey(
+        Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
     active = models.BooleanField(blank=True, null=True)
 
     class Meta:
@@ -48,13 +51,11 @@ class Plate(models.Model):
 
 
 class Revision(models.Model):
-    plate_number = models.ForeignKey(Plate, models.DO_NOTHING, db_column='platenumber', blank=True, null=True)
-    revision_date = models.DateField(blank=True, null=True)
+    plate_number = models.ForeignKey(
+        Plate, models.DO_NOTHING, db_column='platenumber', blank=True, null=True)
+    revision_date = models.DateField(blank=True, db_column='revisiondate', null=True)
     outcome = models.CharField(max_length=10, blank=True, null=True)
     motivation = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'revisions'
-
-
-

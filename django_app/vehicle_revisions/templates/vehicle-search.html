@@ -1,0 +1,38 @@
+{% extends "base_generic.html" %}
+{% block title %}<title>Ricerca veicoli</title>{% endblock %}
+{% load static %}
+{% block style %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/genericCard.css' %}" />
+{% endblock %}
+{% block scripts %}
+    <script type="module" src="{% static '/js/pages/veicolo.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="searchContainer border-bottom pb-2">
+        <form id="searchForm" class="d-flex flex-wrap gap-2">
+            <div class="d-flex flex-column">
+                <label for="telaio" class="form-label">Telaio:</label>
+                <input type="text" id="telaio" name="telaio" class="form-control">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="modello" class="form-label">Modello:</label>
+                <input type="text" id="modello" name="modello" class="form-control">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="marca" class="form-label">Marca:</label>
+                <input type="text" id="marca" name="marca" class="form-control">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="dataProd" class="form-label">Data di produzione:</label>
+                <input type="date" id="dataProd" name="dataProd" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-light">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+    </div>
+    <!-- Search Results -->
+    <div id="searchResults"
+         class="d-flex justify-content-center flex-wrap gap-3 pt-4"></div>
+{% endblock %}
