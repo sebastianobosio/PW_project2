@@ -4,31 +4,13 @@
     height: 100vh;
     overflow-y: auto;
     background-color: #d2b48c;
-    padding: 20px;
-    width: 300px; /* Adjust width as needed */
-}
-
-.addFormDiv .form-group {
-    margin-bottom: 15px;
-}
-
-.addFormDiv label {
-    display: block;
-    font-weight: bold;
 }
 
 .addFormDiv input[type="text"],
 .addFormDiv input[type="date"],
 .addFormDiv select {
-    width: 100%;
-    border: 1px solid #654321; /* Dark brown border for select */
+    border: 1px solid #654321;
     border-radius: 3px;
-    padding: 5px;
-}
-
-.addFormDiv .button-group {
-    display: flex;
-    justify-content: space-between;
 }
 
 .addFormDiv .submit-button,
@@ -36,7 +18,6 @@
     background-color: #8b4513; /* Brown background */
     color: #fff;
     border: none;
-    padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -44,8 +25,4 @@
 .addFormDiv .submit-button:hover,
 .addFormDiv .undo-button:hover {
     background-color: #654321;
-}
-
-.addFormDiv .submit-button i {
-    margin-left: 10px;
 }

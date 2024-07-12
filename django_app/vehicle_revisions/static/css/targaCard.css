@@ -1,11 +1,4 @@
-/* Styles for the dot elements */
-.targaDiv {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.targa .dot {
+.dot {
     width: auto;
     height: auto;
     border-radius: 5px;
@@ -13,10 +6,9 @@
     color: black;
 }
 
-.targa .active-dot {
+.active-dot {
     background-color: #008000; /* Green dot for active targas */
 }
-
-.targa .non-active-dot {
+.non-active-dot {
     background-color: #dc1414; /* Red dot for non-active targas */
 }

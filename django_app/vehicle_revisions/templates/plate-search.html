@@ -4,7 +4,7 @@
 {% block style %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'css/genericCard.css' %}" />
-    <link rel="stylesheet" href="/css/targaCard.css">
+    <link rel="stylesheet" href="{% static 'css/targaCard.css' %}">
 {% endblock %}
 {% block scripts %}
     <script src="{% static '/js/ajaxHelper.js' %}"></script>
@@ -22,11 +22,11 @@
                 <input type="text" id="telaio" name="telaio" class="form-control">
             </div>
             <div class="d-flex flex-column">
-                <label for="dataEm" class="form-label">Data di produzione:</label>
+                <label for="dataEm" class="form-label">Data di emissione:</label>
                 <input type="date" id="dataEm" name="dataEm" class="form-control">
             </div>
             <div class="d-flex flex-column">
-                <label for="dataRes" class="form-label">Data di produzione:</label>
+                <label for="dataRes" class="form-label">Data di restituzione:</label>
                 <input type="date" id="dataRes" name="dataRes" class="form-control">
             </div>
             <div>

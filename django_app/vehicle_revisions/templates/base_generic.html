@@ -55,14 +55,17 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'plate_search' %}">Ricerca targhe</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'revision_search' %}">Ricerca revisioni</a>
+                                </li>
                             </ul>
                         </div>
                     </nav>
                 {% endblock %}
-                <div class="col-md-9 ms-sm-auto col-lg-10 px-4 py-5 main-content">
+                <div class="col-sm col-md ms-sm-auto col-lg px-4 py-5 main-content">
                     {% block content %}{% endblock %}
                 </div>
-                {% block right_column %}{% endblock %}
+                    {% block right_column %}{% endblock %}
             </div>
         </div>
     </body>
