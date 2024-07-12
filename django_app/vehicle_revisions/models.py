@@ -20,7 +20,7 @@ class Vehicle(models.Model):
 
 class Activeplate(models.Model):
     number = models.CharField(primary_key=True, max_length=7)
-    emission_date = models.DateField(blank=True, null=True)
+    emission_date = models.DateField(blank=True, db_column='emissiondate', null=True)
     vehicle_number = models.ForeignKey(
         Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
 
@@ -30,10 +30,10 @@ class Activeplate(models.Model):
 
 class Inactiveplate(models.Model):
     number = models.CharField(primary_key=True, max_length=7)
-    emission_date = models.DateField(blank=True, null=True)
+    emission_date = models.DateField(blank=True, db_column='emissiondate', null=True)
     vehicle_number = models.ForeignKey(
         Vehicle, models.DO_NOTHING, db_column='vehiclenumber', blank=True, null=True)
-    res_date = models.DateField(blank=True, null=True)
+    res_date = models.DateField(blank=True, db_column='resdate', null=True)
 
     class Meta:
         db_table = 'inactiveplates'

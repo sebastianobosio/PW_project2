@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+{% block title %}<title>Ricerca targhe</title>{% endblock %}
+{% load static %}
+{% block style %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/genericCard.css' %}" />
+    <link rel="stylesheet" href="/css/targaCard.css">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static '/js/ajaxHelper.js' %}"></script>
+    <script type="module" src="{% static '/js/pages/targa.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="searchContainer border-bottom pb-2">
+        <form id="searchForm" class="d-flex flex-wrap gap-2">
+            <div class="d-flex flex-column">
+                <label for="targa" class="form-label">Targa:</label>
+                <input type="text" id="targa" name="targa" class="form-control">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="telaio" class="form-label">Modello:</label>
+                <input type="text" id="telaio" name="telaio" class="form-control">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="dataEm" class="form-label">Data di produzione:</label>
+                <input type="date" id="dataEm" name="dataEm" class="form-control">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="dataRes" class="form-label">Data di produzione:</label>
+                <input type="date" id="dataRes" name="dataRes" class="form-control">
+            </div>
+            <div>
+                <label for="status" class="form-label">Stato:</label>
+                <select id="status" name="status" class="form-control">
+                    <option value="active">Attiva</option>
+                    <option value="returned">Restituita</option>
+                    <option value="both" selected>Tutte</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-light">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+    </div>
+    <!-- Search Results -->
+    <div id="searchResults"
+         class="d-flex justify-content-center flex-wrap gap-3 pt-4"></div>
+{% endblock %}

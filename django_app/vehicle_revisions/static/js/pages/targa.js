@@ -13,7 +13,11 @@ $(document).ready(function () {
     }
 
     function performSearch(formData) {
-        handleAjaxRequest('../php/search_targa.php', 'GET', formData, function (response) {
+        handleAjaxRequest(
+            '', 
+            'GET', 
+            formData,
+            function (response) {
             if (response.success === true) {
                 $('#searchForm')[0].reset();
                 var data = response.data;

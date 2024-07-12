@@ -19,7 +19,6 @@ $(document).ready(function () {
             url: "",
             type: "GET",
             data: formData,
-            dataType: "json",
             success: function(response) {
                 if (response.success === true) {
                     $("#searchForm")[0].reset();
