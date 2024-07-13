@@ -2,6 +2,38 @@ import {checkRevision} from "../modules/checkRevisionFields.js";
 import {handlePageReloadOnDelete, handlePageReloadOnEdit} from "../modules/revisionHandlers.js";
 import {handleAjaxError, handleResponse} from "../modules/handleAjax.js";
 
+/* getCookie and $.ajaxSetup are needed for a POST request in a Django app in this case
+    In the template revision-search.html i have added a dummy form with a csrf. This token is needed
+    for security reason. The problem is that when i modify a revision i don't have a real form,
+    but i fethc data from the component and then assembly an ajax request. So i have to manually
+    include the csrf in the header of the request. The two function below does this.
+*/
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+// Set up jQuery to include the CSRF token in the headers of all AJAX requests
+$.ajaxSetup({
+    beforeSend: function (xhr, settings) {
+        if (!(/^http:.*|^https:.*/.test(settings.url))) { // Only send the token to relative URLs i.e., same-origin requests
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
 export async function renderRevisioneCard(revisione) {
     const revisioneComponent = await createRevisioneCardComponent(revisione);
     // attach handler to edit button
@@ -25,7 +57,7 @@ export async function renderRevisioneDetail(revisione) {
     pressed it calls the function saveChanges.
     The hard part was handle all the cases.
 */
-async function createRevisioneCardComponent(revisione) {
+/*async function createRevisioneCardComponent(revisione) {
     const revisioneDiv = $("<div>").addClass("revisione card");
     const infoDiv = $("<div>").addClass("info");
     const revisioneNumberDiv = $("<div>").html('Revisione: <span class="numero">' + revisione.numero + "</span>").appendTo(infoDiv);
@@ -57,6 +89,51 @@ async function createRevisioneCardComponent(revisione) {
 
     // Edit and remove buttons
     const removeButton = $("<button>").addClass("remove-button");
+    removeButton.on("click", function () {
+        deleteBtnClicked(revisione.numero);
+    });
+    const editButton = await createEditButton(revisioneDiv, removeButton, discardChangeBtn, detailsButton);
+    removeButton.html('<i class="fas fa-trash-alt"></i>'); // This adds a trash icon
+    editButton.appendTo(btnsDiv);
+    removeButton.appendTo(btnsDiv);
+    btnsDiv.appendTo(revisioneDiv);
+
+    return revisioneDiv;
+}*/
+
+async function createRevisioneCardComponent(revisione) {
+    const revisioneDiv = $("<div>").addClass("card mb-3");
+    const infoDiv = $("<div>").addClass("card-body text-dark mt-2");
+    const revisioneNumberDiv = $("<div>").addClass("card-title fw-bold mt-2").html('Revisione:   <span class="numero">' + revisione.id + "</span>").appendTo(infoDiv);
+    const dataRevDiv = $("<div>").addClass("card-text mt-2").html('Data della revisione: <span class="dataRev">' + '<input type="date" value="' + revisione.revision_date + '" disabled></input>' + "</span>").appendTo(infoDiv);
+    const targaNumberDiv = $("<div>").addClass("card-text mt-2").html('Targa associata: <span class="targa p-1">' + revisione.plate_number_id + "</span>").appendTo(infoDiv);
+    const esitoSelect = $("<select>").addClass("esito").prop("disabled", true); // Disable select element initially
+    $("<option>").val("positive").text("Positivo").appendTo(esitoSelect);
+    $("<option>").val("negative").text("Negativo").appendTo(esitoSelect);
+    if (revisione.esito === "positive") {
+        esitoSelect.val("positive");
+    } else if (revisione.outcome === "negative") {
+        esitoSelect.val("negative");
+    }
+    const esitoDiv = $("<div>").addClass("card-text mt-2").html("Esito: ").append(esitoSelect).appendTo(infoDiv);
+    const motivazioneDiv = $("<div>").addClass("motivazioneDiv card-text mt-2").css("display", "none").html('Motivazione: <span class="motivazione"><textarea class="motivazione" oninput="autoResize()" type="text" required disabled></textarea></span>').appendTo(infoDiv);
+    if (revisione.outcome == "negative") {
+        motivazioneDiv.toggle(revisione.outcome === "negative");
+        motivazioneDiv.find(".motivazione textarea").val(revisione.motivation);
+    }
+    infoDiv.appendTo(revisioneDiv);
+    // info buttons
+    const btnsDiv = $("<div>").addClass("px-2 mb-3 mt-auto d-flex justify-content-between gap-2");
+    var discardChangeBtn = $("<button>").addClass("discard-changes btn").html('<i class="fa-solid fa-arrow-left"></i>').hide().appendTo(btnsDiv);
+    const detailsButton = $("<button>").html("Scopri di più" + '<i class="fa-solid fa-circle-info ms-2"></i>').addClass("btn me-auto");
+
+    detailsButton.appendTo(btnsDiv);
+    detailsButton.on("click", function () {
+        revisioneDetailsBtnClicked(revisione);
+    });
+
+    // Edit and remove buttons
+    const removeButton = $("<button>").addClass("btn remove-button");
     removeButton.on("click", function () {
         deleteBtnClicked(revisione.numero);
     });
@@ -146,7 +223,7 @@ function editEsitoChanged(revisioneDiv) {
 }
 
 async function createEditButton(revisioneDiv, removeButton, discardButton, detailsButton = null) {
-    const editButton = $("<button>").addClass("edit-button").html('<i class="fa-solid fa-pen-to-square"></i>');
+    const editButton = $("<button>").addClass("btn").html('<i class="fa-solid fa-pen-to-square"></i>');
 
     function getOriginalValues() {
         return {
@@ -189,7 +266,13 @@ async function createEditButton(revisioneDiv, removeButton, discardButton, detai
             return;
         }
 
-        const dataUpdateRequest = `editId=${id}&editDataRev=${dataRev}&editTarga=${targa}&editEsito=${esito}&editMotivazione=${motivazione}&action=update`;
+        const dataUpdateRequest = {
+            editId: `${id}`,
+            editDataRev: `${dataRev}`,
+            editTarga: `${targa}`,
+            editEsito: `${esito}`,
+            editMotivazione: `${motivazione}`,
+        };
 
         if (await checkRevision(targa, dataRev)) {
             try {
@@ -200,6 +283,7 @@ async function createEditButton(revisioneDiv, removeButton, discardButton, detai
                 if (detailsButton) 
                     detailsButton.show();
                 
+
 
                 removeButton.show();
                 discardButton.hide();
@@ -221,6 +305,7 @@ async function createEditButton(revisioneDiv, removeButton, discardButton, detai
             detailsButton.show();
         
 
+
         removeButton.show();
         discardButton.hide();
         editButton.removeClass("save-change").html('<i class="fa-solid fa-pen-to-square"></i>');
@@ -237,6 +322,7 @@ async function createEditButton(revisioneDiv, removeButton, discardButton, detai
                 detailsButton.hide();
             
 
+
             removeButton.hide();
             discardButton.show();
             editButton.addClass("save-change").html('<i class="fa-solid fa-floppy-disk"></i>');
@@ -252,7 +338,7 @@ async function createEditButton(revisioneDiv, removeButton, discardButton, detai
 
 async function saveChanges(dataUpdateRequest) {
     return new Promise((resolve, reject) => {
-        handleAjaxRequest("/php/search_revisione.php", "POST", dataUpdateRequest, function (response) {
+        handleAjaxRequest(`/vehicle-revisions/edit-revision/${dataUpdateRequest.editId}`, "POST", dataUpdateRequest, function (response) {
             handleResponse(response, "Istanza modificata correttamente", null);
             resolve(response);
         }, function (xhr, status, error) {

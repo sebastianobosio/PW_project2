@@ -1,4 +1,5 @@
 export function handleResponse(response, successMessage, callback) {
+    console.log(response.success)
     if (response.success === true) {
         alert(successMessage);
         // I don't always pass a function, sometime i use this only for the alert function

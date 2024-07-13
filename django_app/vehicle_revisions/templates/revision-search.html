@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-{% block title %}<title>Ricerca targhe</title>{% endblock %}
+{% block title %}<title>Ricerca revisioni</title>{% endblock %}
 {% load static %}
 {% block style %}
     {{ block.super }}
@@ -40,45 +40,61 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
         </form>
-        <button id="addButton"><i class="fa-solid fa-plus"></i></button>
+        <button id="addButton" class="btn btn-light">
+            <i class="fa-solid fa-plus"></i>
+        </button>
     </div>
-
     <!-- Search Results -->
     <div id="searchResults"
          class="d-flex justify-content-center flex-wrap gap-3 pt-4"></div>
+    <form id="csrfTokenForm">
+        {% csrf_token %}
+    </form>
 {% endblock %}
 {% block right_column %}
-<div class="col-sm-4 col-md-3 ms-sm col-lg-3 px-4 py-5 addFormDiv" style="display: none;">
-    <h2>Aggiungi nuova revisione</h2>
-    <form id="addForm" class="d-flex flex-column gap-2">
-        <div class="d-flex flex-column">
-            <label for="addTarga" class="form-label">Targa:</label>
-            <input type="text" id="addTarga" name="addTarga" required class="form-control">
-        </div>
-        <div class="d-flex flex-column">
-            <label for="addDataRev" class="form-label">Data Revisione:</label>
-            <input type="date" id="addDataRev" name="addDataRev" required class="form-control">
-        </div>
-        <div>
-            <label for="addEsito" class="form-label">Esito:</label>
-            <select id="addEsito" name="addEsito" required class="form-control">
-                <option value="">Select</option>
-                <option value="positive">Positivo</option>
-                <option value="negative">Negativo</option>
-            </select>
-        </div>
-        <!--<div id="addMotivazioneDiv" class="d-flex flex-column" style="display: none;">
-            <label for="addMotivazione" class="form-label">Motivazione:</label>
-            <textarea class="motivazione" oninput="autoResize()" id="addMotivazione" name="addMotivazione"></textarea>
-        </div> the problem is d-flex and flex-column-->
-        <div class="d-flex flex-column" id="addMotivazioneDiv" style="display: none;">
-            <label for="addMotivazione">Motivazione:</label>
-            <textarea class="motivazione" oninput="autoResize()" id="addMotivazione" name="addMotivazione"></textarea>
-        </div>
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="submit-button px-3 py-2">Invia<i class="fa-solid fa-paper-plane ms-3"></i></button>
-            <button id="undoButton" class="undo-button px-3 py-2"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-    </form>
-</div>
+    <div class="col-sm-4 col-md-3 ms-sm col-lg-3 px-4 py-5 addFormDiv"
+         style="display: none">
+        <h2>Aggiungi nuova revisione</h2>
+        <form id="addForm" class="d-flex flex-column gap-2">
+            <div class="d-flex flex-column">
+                <label for="addTarga" class="form-label">Targa:</label>
+                <input type="text"
+                       id="addTarga"
+                       name="addTarga"
+                       required
+                       class="form-control">
+            </div>
+            <div class="d-flex flex-column">
+                <label for="addDataRev" class="form-label">Data Revisione:</label>
+                <input type="date"
+                       id="addDataRev"
+                       name="addDataRev"
+                       required
+                       class="form-control">
+            </div>
+            <div>
+                <label for="addEsito" class="form-label">Esito:</label>
+                <select id="addEsito" name="addEsito" required class="form-control">
+                    <option value="">Select</option>
+                    <option value="positive">Positivo</option>
+                    <option value="negative">Negativo</option>
+                </select>
+            </div>
+            <div id="addMotivazioneDiv" style="display: none;">
+                <label for="addMotivazione">Motivazione:</label>
+                <textarea class="motivazione"
+                          oninput="autoResize()"
+                          id="addMotivazione"
+                          name="addMotivazione"></textarea>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="submit-button px-3 py-2">
+                    Invia<i class="fa-solid fa-paper-plane ms-3"></i>
+                </button>
+                <button id="undoButton" class="undo-button px-3 py-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

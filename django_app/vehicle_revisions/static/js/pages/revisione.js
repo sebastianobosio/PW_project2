@@ -19,7 +19,7 @@ $(document).ready(function () {
 
     function searchFormSubmitted(event) {
         event.preventDefault();
-        var formData = $(this).serialize() + "&action=read";
+        var formData = $(this).serialize();
         performSearch(formData);
     }
 });

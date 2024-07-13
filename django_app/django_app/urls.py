@@ -26,11 +26,11 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('vehicle_revisions/', include('vehicle_revisions.urls')),
+    path('vehicle-revisions/', include('vehicle_revisions.urls')),
 ]
 
 urlpatterns += [
-    path('', RedirectView.as_view(url='vehicle_revisions/', permanent=True)),
+    path('', RedirectView.as_view(url='vehicle-revisions/', permanent=True)),
 ]
 
 

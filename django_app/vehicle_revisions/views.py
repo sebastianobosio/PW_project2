@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Vehicle, Plate, Activeplate, Inactiveplate
+from .models import Vehicle, Plate, Activeplate, Inactiveplate, Revision
 
 
 # Create your views here.
@@ -52,7 +52,7 @@ def plate_search(request):
                 queryset = queryset.filter(number__icontains=number)
             if vehicle_number:
                 queryset = queryset.filter(
-                    vehiclenumber__icontains=vehicle_number)
+                    vehicle_number=vehicle_number)
             if emission_date:
                 queryset = queryset.filter(emission_date=emission_date)
 
@@ -63,14 +63,12 @@ def plate_search(request):
                 plate['status'] = status
                 plates_data.append(plate)
 
-
         def fetch_plates(status, plate_model):
             queryset = filter_data(plate_model.objects.all())
             if status == 'returned' and res_date:
                 queryset = queryset.filter(resdate=res_date)
             plates = queryset.values()
             add_status(status, plates)
-
 
         plates_data = []
         if status == 'active':
@@ -96,4 +94,72 @@ def plate_search(request):
 
 
 def revision_search(request):
+    if request.method == 'GET' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        number = request.GET.get('numero', '')
+        plate = request.GET.get('targa', '')
+        revision_date = request.GET.get('dataRev', '')
+        outcome = request.GET.get('esito', '')
+
+        def filter_data(queryset):
+            if number:
+                queryset = queryset.filter(id=number)
+            if plate:
+                queryset = queryset.filter(plate_number=plate)
+            if revision_date:
+                queryset = queryset.filter(revision_date=revision_date)
+
+            return queryset
+
+        def add_status(status, queryset_values):
+            for plate in queryset_values:
+                plate['status'] = status
+                revisions_data.append(plate)
+
+        def fetch_revisions(outcome, revision_model, revisions_data=[]):
+            queryset = filter_data(
+                revision_model.objects.all().filter(outcome=outcome))
+            revisions = queryset.values()
+            revisions_data += list(revisions)
+            return revisions_data
+
+        revisions_data = []
+        if outcome == 'positive':
+            revisions_data = fetch_revisions(outcome, Revision)
+        elif outcome == 'negative':
+            revisions_data = fetch_revisions(outcome, Revision)
+        else:
+            # fetch active plates
+            revisions_data = fetch_revisions('positive', Revision)
+            revisions_data = fetch_revisions(
+                'negative', Revision, revisions_data)
+
+        print(revisions_data)
+        revisions_data_sorted = sorted(
+            revisions_data, key=lambda x: x['revision_date'], reverse=True)
+
+        return JsonResponse({'success': True, 'data': revisions_data_sorted})
+
     return render(request, 'revision-search.html')
+
+
+def edit_revision(request, id):
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        new_revdate = request.POST.get('editDataRev', None)
+        new_plate = request.POST.get('editTarga', None)
+        new_outcome = request.POST.get('editEsito', None)
+        new_motivation = request.POST.get('editMotivazione', None)
+
+        obj = Revision.objects.get(id=id)
+        obj.plate_number = new_plate
+        obj.revision_date = new_revdate
+        obj.outcome = new_outcome
+        obj.motivation = new_motivation
+        obj.save()
+
+        new_revision = {'id': obj.id, 'plate': obj.plate_number}
+        response = {
+            'success': True,
+
+        }
+        return JsonResponse(response)
+    return JsonResponse({"errors": "can't edit revision"}, status=400)
