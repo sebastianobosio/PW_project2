@@ -49,7 +49,7 @@ def plate_search(request):
 
         def filter_data(queryset):
             if number:
-                queryset = queryset.filter(number__icontains=number)
+                queryset = queryset.filter(number=number)
             if vehicle_number:
                 queryset = queryset.filter(
                     vehicle_number=vehicle_number)
@@ -80,7 +80,7 @@ def plate_search(request):
             fetch_plates('active', Activeplate)
             fetch_plates('returned', Inactiveplate)
 
-        print(plates_data)
+        #print(plates_data)
         plates_data_sorted = sorted(
             plates_data, key=lambda x: x['emission_date'], reverse=True)
 
@@ -133,7 +133,7 @@ def revision_search(request):
             revisions_data = fetch_revisions(
                 'negative', Revision, revisions_data)
 
-        print(revisions_data)
+        #print(revisions_data)
         revisions_data_sorted = sorted(
             revisions_data, key=lambda x: x['revision_date'], reverse=True)
 
@@ -150,16 +150,54 @@ def edit_revision(request, id):
         new_motivation = request.POST.get('editMotivazione', None)
 
         obj = Revision.objects.get(id=id)
-        obj.plate_number = new_plate
+        print(obj.plate_number)
+        obj.plate_number = Plate.objects.get(number=new_plate)
         obj.revision_date = new_revdate
         obj.outcome = new_outcome
         obj.motivation = new_motivation
         obj.save()
-
         new_revision = {'id': obj.id, 'plate': obj.plate_number}
+        print(new_revision)
+
         response = {
             'success': True,
-
         }
         return JsonResponse(response)
-    return JsonResponse({"errors": "can't edit revision"}, status=400)
+    return JsonResponse({"errors": "not an ajax request"}, status=400)
+
+
+def create_revision(request):
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        new_plate_number = request.POST.get('addTarga', None)
+        new_revdate = request.POST.get('addDataRev', None)
+        new_outcome = request.POST.get('addEsito', None)
+        new_motivation = request.POST.get('addMotivazione', None)
+
+        obj = Revision.objects.create(
+            plate_number=Plate.objects.get(number=new_plate_number),
+            revision_date=new_revdate,
+            outcome=new_outcome,
+            motivation=new_motivation,
+        )
+
+        new_revision = {'id': obj.id, 'plate_number': obj.plate_number.number,
+                        'revision_date': obj.revision_date, 'outcome': obj.outcome, 'motivation': obj.motivation}
+        print(new_revision)
+
+        response = {
+            'success': True,
+            'revision': new_revision
+        }
+        return JsonResponse(response)
+    return JsonResponse({"errors": "not an ajax request"}, status=400)
+
+
+def delete_revision(request, id):
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        obj = Revision.objects.get(id=id)
+        obj.delete()
+        response = {
+            'success': True,
+        }
+        return JsonResponse(response)
+    return JsonResponse({"errors": "not an ajax request"}, status=400)

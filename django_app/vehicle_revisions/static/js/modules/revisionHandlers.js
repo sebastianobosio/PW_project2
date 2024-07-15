@@ -8,7 +8,7 @@ import {returnToMotherPage as returnToMotherPageRevisione} from "../dettagli/det
 // based on the modification and on the page the are different scenario.
 export async function handlePageReloadOnDelete() {
     var currentPage = window.location.pathname;
-    if (currentPage.endsWith("revisioni.php")) {
+    if (currentPage.endsWith("revision-search/")) {
         performDefaultSearch(); // se sono in revisioni chiamo la funzione presente nel file searchRevisione.js
     } else if (currentPage.endsWith("dettagli-revisione.php")) {
         returnToMotherPageRevisione();
@@ -25,7 +25,7 @@ export async function handlePageReloadOnEdit() {
     var currentPage = window.location.pathname;
     if (currentPage.endsWith("dettagli-revisione.php")) { // se sono in una pagina dettagli
         window.location.reload(); // se cambia la targa cambia anche i dettagli della targa e il veicolo
-    } else if (currentPage.endsWith("revisioni.php")) {
+    } else if (currentPage.endsWith("revision-search.php")) {
         return;
     } else if (currentPage.endsWith("dettagli-veicolo.php")) {
         loadRevisioniDiv(getTarghe());

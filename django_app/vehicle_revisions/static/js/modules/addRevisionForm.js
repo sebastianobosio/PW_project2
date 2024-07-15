@@ -27,10 +27,10 @@ export async function addFormSubmitted(event, formData, callback) {
 }
 
 export function performAddAction(formData, callback) {
-    handleAjaxRequest("/php/search_revisione.php", "POST", formData, function (response) {
+    handleAjaxRequest("/vehicle-revisions/create-revision/", "POST", formData, function (response) {
         var page = window.location.pathname;
 
-        if (page.endsWith("revisioni.php")) {
+        if (page.endsWith("revision-search/")) {
             resetForm(false); // Reset all fields
         } else if (page.endsWith("dettagli-targa.php") || page.endsWith("dettagli-veicolo.php")) {
             resetForm(true); // Reset all fields except targa

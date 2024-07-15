@@ -135,7 +135,7 @@ async function createRevisioneCardComponent(revisione) {
     // Edit and remove buttons
     const removeButton = $("<button>").addClass("btn remove-button");
     removeButton.on("click", function () {
-        deleteBtnClicked(revisione.numero);
+        deleteBtnClicked(revisione.id);
     });
     const editButton = await createEditButton(revisioneDiv, removeButton, discardChangeBtn, detailsButton);
     removeButton.html('<i class="fas fa-trash-alt"></i>'); // This adds a trash icon
@@ -198,13 +198,10 @@ function viewRevisioneDetails(revisione) {
 
 function deleteBtnClicked(numeroRev) {
     const id = numeroRev;
-
+    console.log(id)
     var confirmed = confirm("Are you sure you want to delete this entry");
     if (confirmed) {
-        handleAjaxRequest("/php/search_revisione.php", "POST", {
-            action: "delete",
-            id: id
-        }, function (response) {
+        handleAjaxRequest(`/vehicle-revisions/delete-revision/${id}/`, "POST", null, function (response) {
             handleResponse(response, "Elemento rimosso", null);
             handlePageReloadOnDelete();
         }, function (xhr, status, error) {
@@ -271,7 +268,7 @@ async function createEditButton(revisioneDiv, removeButton, discardButton, detai
             editDataRev: `${dataRev}`,
             editTarga: `${targa}`,
             editEsito: `${esito}`,
-            editMotivazione: `${motivazione}`,
+            editMotivazione: `${motivazione}`
         };
 
         if (await checkRevision(targa, dataRev)) {
@@ -338,7 +335,9 @@ async function createEditButton(revisioneDiv, removeButton, discardButton, detai
 
 async function saveChanges(dataUpdateRequest) {
     return new Promise((resolve, reject) => {
-        handleAjaxRequest(`/vehicle-revisions/edit-revision/${dataUpdateRequest.editId}`, "POST", dataUpdateRequest, function (response) {
+        handleAjaxRequest(`/vehicle-revisions/edit-revision/${
+            dataUpdateRequest.editId
+        }/`, "POST", dataUpdateRequest, function (response) {
             handleResponse(response, "Istanza modificata correttamente", null);
             resolve(response);
         }, function (xhr, status, error) {

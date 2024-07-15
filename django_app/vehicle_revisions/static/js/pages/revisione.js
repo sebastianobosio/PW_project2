@@ -4,7 +4,7 @@ import {addFormSubmitted, addEsitoChanged, hideAddForm, showAddForm} from "../mo
 $(document).ready(function () {
     $("#addForm").submit(function (event) {
         event.preventDefault();
-        var formData = $(this).serialize() + "&action=create";
+        var formData = $(this).serialize();
         addFormSubmitted(event, formData, () => performDefaultSearch());
     });
     $("#addEsito").change(addEsitoChanged); // need to be copied for the #editEsitoS

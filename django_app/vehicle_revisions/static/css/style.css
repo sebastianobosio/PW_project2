@@ -27,8 +27,11 @@ footer {
 }
 
 .navigation {
+    position: sticky;
+    overflow-y: auto;
+    top: 0;
     background-color: #d2b48c;
-    min-height: 100vh;
+    height: 100vh;
 }
 
 .navigation .nav-link {
