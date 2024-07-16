@@ -74,12 +74,16 @@ export function initializePage() {
             }
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const targaNumber = urlParams.get("id");
+        
         // global variable
         // Fetch car details based on the ID
         fetchTargaDetails(targaNumber);
     });
+    
+    // Get plate ID from URL query parameter
+    const url = window.location.pathname 
+    const segments = url.split('/');
+    const targaNumber = segments.filter(segment => segment !== '').pop();
 }
 
 function returnToMotherPage() {
@@ -89,5 +93,5 @@ function returnToMotherPage() {
 
 // used by revisionHandlers.js to handle the reloadOnEdit or reloadOnDelete that are called when editing or deleting a revions Card
 export function getTarga() {
-    return targa.numero;
+    return targa.number;
 }

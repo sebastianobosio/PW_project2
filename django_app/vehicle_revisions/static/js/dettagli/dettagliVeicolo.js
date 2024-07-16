@@ -18,7 +18,7 @@ export function initializePage() {
     $(document).ready(function () {
         $("#addForm").submit(function (event) {
             event.preventDefault();
-            var formData = $(this).serialize() + "&addTarga=" + targaAttiva.numero + "&action=create";
+            var formData = $(this).serialize() + "&addTarga=" + targaAttiva.number;
             // when the form is submitted the callback function is called, and will reload the revisionDiv
             addFormSubmitted(event, formData, () => loadRevisioniDiv(targhe));
         });
@@ -32,21 +32,22 @@ export function initializePage() {
         async function fetchVeicoloDetails(id) {
             try {
                 const veicoloResponse = await new Promise((resolve, reject) => {
-                    handleAjaxRequest("/php/search_veicolo.php", // URL to fetch car details from the server
+                    handleAjaxRequest("/vehicle-revisions/vehicle-search/", // URL to fetch car details from the server
                             "GET", "telaio=" + id,
                     resolve, reject);
                 });
                 if (veicoloResponse.success == true) {
                     const veicolo = veicoloResponse.data[0];
-                    $("#titolo").html("<h1>Dettagli sul veicolo " + veicolo.telaio + "</h1>");
+                    $("#titolo").html("<h1>Dettagli sul veicolo " + veicolo.number + "</h1>");
                     const veicoloComponent = renderVeicoloDetail(veicolo);
                     veicoloComponent.appendTo($("#veicolo"));
 
                     const targaResponse = await new Promise((resolve, reject) => {
-                        handleAjaxRequest("/php/search_targa.php", "GET", "telaio=" + veicolo.telaio, resolve, reject);
+                        handleAjaxRequest("/vehicle-revisions/plate-search/", "GET", "telaio=" + veicolo.number, resolve, reject);
                     });
                     var state = false;
                     // targhe = [];
+                    console.log(targaResponse)
                     if (targaResponse.success == true) {
                         var length = targaResponse.data.length;
                         var targaText = length === 1 ? "è associata " + length + " targa" : "sono associate " + length + " targhe";
@@ -58,7 +59,7 @@ export function initializePage() {
                             }
                             // here i could save targhe infos and sort them to find the active one and put it first, but i'm lazy :)
                             // better if done in the backend. I actually done it
-                            targhe.push(targa.numero);
+                            targhe.push(targa.number);
                             var targaComponent = renderTargaCard(targa);
                             targaComponent.appendTo($("#targa"));
                         });
@@ -66,8 +67,9 @@ export function initializePage() {
                         $(".targa .titolo").html("<h3>Questo veicolo non è ancora stato targato</h3>");
                     }
                     // if there's an activePlate than the addForm is displayed and prepared
-                    toggleFormVisibility(state, state ? targaAttiva.numero : null);
-                    loadRevisioniDiv(targhe);
+                    toggleFormVisibility(state, state ? targaAttiva.number : null);
+                    if (targhe.length) {loadRevisioniDiv(targhe);}
+                    //loadRevisioniDiv(targhe);
                     // non devo più fare la richiesta per ottenere le targhe, le ho già da prima
                 } else {
                     alert("Non sono state trovate corrispondenze");
@@ -86,13 +88,14 @@ export function initializePage() {
     });
 
     // Get car ID from URL query parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const veicoloNumber = urlParams.get("id");
+    const url = window.location.pathname 
+    const segments = url.split('/');
+    const veicoloNumber = segments.filter(segment => segment !== '').pop();
 }
 var targhe = [];
 
 function returnToMotherPage() {
-    var motherURL = "/pages/veicoli.php";
+    var motherURL = "/vehicle-revisions/vehicle-search/";
     window.location.href = motherURL;
 }
 

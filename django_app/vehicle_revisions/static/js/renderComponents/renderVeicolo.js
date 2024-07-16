@@ -8,26 +8,6 @@ export function renderVeicoloDetail(veicolo) {
     return veicoloComponent;
 }
 
-/*function createVeicoloCardComponent(veicolo) {
-    const vehicleDiv = $('<div>').addClass('veicolo card');
-    const infoDiv = $('<div>').addClass('info');
-    const veicoloNumberDiv = $('<div>').text('Telaio: ' + veicolo.number).appendTo(infoDiv);
-    const veicoloModelDiv = $('<div>').text('Modello: ' + veicolo.model).appendTo(infoDiv);
-    const veicoloBrandDiv = $('<div>').text('Marca: ' + veicolo.brand).appendTo(infoDiv);
-    const veicoloProdDateDiv = $('<div>').text('Data di produzione: ' + veicolo.prod_date).appendTo(infoDiv);
-    infoDiv.appendTo(vehicleDiv);
-    const detailsBtnDiv = $('<div>').addClass('action-btn');
-    const detailsButton = $('<button>').html('Scopri di più' + '<i class="fa-solid fa-circle-info"></i>').addClass('detail-button');
-    detailsButton.appendTo(detailsBtnDiv)
-
-    detailsButton.on('click', function () {
-        veicoloDetailsBtnClicked(veicolo)
-    });
-    detailsBtnDiv.appendTo(vehicleDiv);
-
-    return vehicleDiv;
-}*/
-
 function createVeicoloCardComponent(veicolo) {
     const vehicleDiv = $('<div>').addClass('card mb-3');
     const infoDiv = $('<div>').addClass('card-body text-dark');
@@ -52,12 +32,13 @@ function createVeicoloCardComponent(veicolo) {
 }
 
 function createVeicoloDetailComponent(veicolo) {
-    const vehicleDiv = $('<div>').addClass('veicolo card');
-    const infoDiv = $('<div>').addClass('info');
-    const veicoloNumberDiv = $('<div>').text('Telaio: ' + veicolo.number).appendTo(infoDiv);
-    const veicoloModelDiv = $('<div>').text('Modello: ' + veicolo.model).appendTo(infoDiv);
-    const veicoloBrandDiv = $('<div>').text('Marca: ' + veicolo.brand).appendTo(infoDiv);
-    const veicoloProdDateDiv = $('<div>').text('Data di produzione: ' + veicolo.prod_date).appendTo(infoDiv);
+    const vehicleDiv = $('<div>').addClass('card mb-3');
+    const infoDiv = $('<div>').addClass('card-body text-dark');
+    
+    const veicoloNumberDiv = $('<p>').addClass('card-title fw-bold').text('Telaio: ' + veicolo.number).appendTo(infoDiv);
+    const veicoloModelDiv = $('<p>').addClass('card-text').text('Modello: ' + veicolo.model).appendTo(infoDiv);
+    const veicoloBrandDiv = $('<p>').addClass('card-text').text('Marca: ' + veicolo.brand).appendTo(infoDiv);
+    const veicoloProdDateDiv = $('<p>').addClass('card-text').text('Data di produzione: ' + veicolo.prod_date).appendTo(infoDiv);
     infoDiv.appendTo(vehicleDiv);
     /*const detailsBtnDiv = $('<div>').addClass('action-btn');
     const detailsButton = $('<button>').html('Scopri di più' + '<i class="fa-solid fa-circle-info"></i>').addClass('detail-button');
@@ -74,5 +55,5 @@ function veicoloDetailsBtnClicked(veicolo) {
 };
 
 function viewVeicoloDetails(veicolo) {
-    window.location.href = '/pages/veicolo/dettagli-veicolo.php?id=' + veicolo.telaio;
+    window.location.href = `/vehicle-revisions/vehicle-details/${veicolo.number}/`;
 }

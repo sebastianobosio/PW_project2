@@ -1,55 +1,42 @@
 {% extends "base_generic.html" %}
-{% block title %}<title>Ricerca revisioni</title>{% endblock %}
+<!--{% block title %}<title>Dettaglio targa</title>{% endblock %}
 {% load static %}
 {% block style %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'css/genericCard.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/revisioneCard.css' %}">
-    <link rel="stylesheet" href="{% static '/css/addForm.css' %}">
-    <link rel="stylesheet" href="{% static '/css/textarea.css' %}">
+    <link rel="stylesheet" href="{% static '/css/genericCard.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/dettagliStyle.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/revisioneCard.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/targaCard.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/addForm.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/textarea.css' %}" />
 {% endblock %}
 {% block scripts %}
-    <script src="{% static '/js/resizeMotivazioneField.js' %}"></script>
     <script src="{% static '/js/ajaxHelper.js' %}"></script>
-    <script type="module" src="{% static '/js/pages/revisione.js' %}"></script>
+    <script src="{% static '/js/resizeMotivazioneField.js' %}"></script>
+    <script type="module"
+            src="{% static '/js/initPages/initDettagliTarga.js' %}"></script>
 {% endblock %}
 {% block content %}
-    <div class="d-flex justify-content-between searchContainer border-bottom pb-2">
-        <form id="searchForm" class="d-flex flex-wrap gap-2">
-            <div class="d-flex flex-column">
-                <label for="numero" class="form-label">Numero:</label>
-                <input type="text" id="numero" name="numero" class="form-control">
-            </div>
-            <div class="d-flex flex-column">
-                <label for="targa" class="form-label">Targa:</label>
-                <input type="text" id="targa" name="targa" class="form-control">
-            </div>
-            <div class="d-flex flex-column">
-                <label for="dataRev" class="form-label">Data revisione:</label>
-                <input type="date" id="dataRev" name="dataRev" class="form-control">
-            </div>
-            <div>
-                <label for="esito" class="form-label">Esito:</label>
-                <select id="esito" name="esito" class="form-control">
-                    <option value="positive">Positivo</option>
-                    <option value="negative">Negativo</option>
-                    <option value="both" selected>Entrambi</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-light">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-        </form>
-        <button id="addButton" class="btn btn-light">
+    <div class="titolo-container d-flex justify-content-between align-items-center pb-2">
+        <div id="titolo"></div>
+        <button id="addButton" class="btn ms-auto">
             <i class="fa-solid fa-plus"></i>
         </button>
     </div>
-    <!-- Search Results -->
-    <div id="searchResults"
-         class="d-flex justify-content-center flex-wrap gap-3 pt-4"></div>
-    <form id="csrfTokenForm">
-        {% csrf_token %}
-    </form>
+    <div id="dettagli-content">
+        <div class="targa">
+            <div class="titolo"></div>
+            <div id="targa" class="d-flex flex-wrap gap-3"></div>
+        </div>
+        <div class="veicolo mt-2">
+            <div class="titolo"></div>
+            <div id="veicolo" class="d-flex flex-wrap gap-3"></div>
+        </div>
+        <div class="revisione mt-2">
+            <div class="titolo"></div>
+            <div id="revisione" class="d-flex flex-wrap gap-3"></div>
+        </div>
+    </div>
 {% endblock %}
 {% block right_column %}
     <div class="col-sm-4 col-md-3 ms-sm col-lg-2 px-4 py-5 addFormDiv"
@@ -98,3 +85,4 @@
         </form>
     </div>
 {% endblock %}
+-->

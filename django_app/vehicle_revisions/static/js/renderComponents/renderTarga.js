@@ -95,5 +95,5 @@ function targaDetailsBtnClicked(targa) {
 };
 
 function viewTargaDetails(targa) {
-    window.location.href = '/pages/targa/dettagli-targa.php?id=' + targa.numero;
+    window.location.href = `/vehicle-revisions/plate-details/${targa.number}/`;
 }

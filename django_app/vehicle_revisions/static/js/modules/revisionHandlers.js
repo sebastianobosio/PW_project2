@@ -10,11 +10,11 @@ export async function handlePageReloadOnDelete() {
     var currentPage = window.location.pathname;
     if (currentPage.endsWith("revision-search/")) {
         performDefaultSearch(); // se sono in revisioni chiamo la funzione presente nel file searchRevisione.js
-    } else if (currentPage.endsWith("dettagli-revisione.php")) {
+    } else if (currentPage.endsWith("revision-details/")) {
         returnToMotherPageRevisione();
-    } else if (currentPage.endsWith("dettagli-veicolo.php")) {
+    } else if (currentPage.endsWith("vehicle-details/")) {
         loadRevisioniDiv(getTarghe());
-    } else if (currentPage.endsWith("dettagli-targa.php")) {
+    } else if (currentPage.endsWith("plate-details/")) {
         loadRevisioniDiv(getTarga());
     } else {
         console.error("page not supported");
@@ -25,11 +25,11 @@ export async function handlePageReloadOnEdit() {
     var currentPage = window.location.pathname;
     if (currentPage.endsWith("dettagli-revisione.php")) { // se sono in una pagina dettagli
         window.location.reload(); // se cambia la targa cambia anche i dettagli della targa e il veicolo
-    } else if (currentPage.endsWith("revision-search.php")) {
+    } else if (currentPage.endsWith("revision-search/")) {
         return;
-    } else if (currentPage.endsWith("dettagli-veicolo.php")) {
+    } else if (currentPage.endsWith("vehicle-details/")) {
         loadRevisioniDiv(getTarghe());
-    } else if (currentPage.endsWith("dettagli-targa.php")) {
+    } else if (currentPage.endsWith("plate-details/")) {
         loadRevisioniDiv(getTarga());
     } else {
         console.error("page not supported");

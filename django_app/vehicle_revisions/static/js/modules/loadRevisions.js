@@ -5,13 +5,31 @@ import {renderRevisioneCard} from "../renderComponents/renderRevisione.js";
 // it's called on various situation, when loading the dettagli-veicolo/targa pages, when adding a new revision from
 // the dettaglio pages and when handling the edit mode in revisioniHandlers.js
 export function loadRevisioniDiv(identifier) {
-    var pathname = window.location.pathname;
-    if (pathname.endsWith('dettagli-veicolo.php')) {
-        loadRevisioniDivDV(identifier);
-    } else if (pathname.endsWith('dettagli-targa.php')) {
-        loadRevisioniDivDT(identifier);
+    var path = window.location.pathname;
+    if (path.includes('/vehicle-details/')) {
+        const segments = path.split('/').filter(segment => segment !== '');
+        const vehicleDetailsIndex = segments.indexOf('vehicle-details');
+        const nextSegment = segments[vehicleDetailsIndex + 1];
+
+        if (!isNaN(nextSegment)) {
+            console.log("This is a child page of vehicle-details/");
+            loadRevisioniDivDV(identifier);
+        } else {
+            console.log("This is NOT a child page of vehicle-details/");
+        }
+    } else if (path.includes('/plate-details/')) {
+        const segments = path.split('/').filter(segment => segment !== '');
+        const vehicleDetailsIndex = segments.indexOf('plate-details');
+        const nextSegment = segments[vehicleDetailsIndex + 1];
+
+        if (!isNaN(nextSegment)) {
+            console.log("This is a child page of plate-details/");
+            loadRevisioniDivDT(identifier);
+        } else {
+            console.log("This is NOT a child page of plate-details/");
+        }
     } else {
-        console.error("Unsupported page:", pathname);
+        console.log("This is NOT a child page of vehicle-details/ or plate-details/");
     }
 }
 
@@ -20,7 +38,7 @@ async function loadRevisioniDivDV(targhe) {
     $(div).empty();
     try {
         const revisioneResponse = await new Promise((resolve, reject) => {
-            handleAjaxRequest("/php/search_revisione.php", "GET", "targhe=" + targhe + "&action=read-array", resolve, reject);
+            handleAjaxRequest("/vehicle-revisions/revision-search/", "GET", "targhe=" + targhe + "&action=read-array", resolve, reject);
         });
         if (revisioneResponse.success == true) {
             var length = revisioneResponse.data.length;
