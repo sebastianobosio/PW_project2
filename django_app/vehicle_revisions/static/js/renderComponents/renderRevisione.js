@@ -57,49 +57,6 @@ export async function renderRevisioneDetail(revisione) {
     pressed it calls the function saveChanges.
     The hard part was handle all the cases.
 */
-/*async function createRevisioneCardComponent(revisione) {
-    const revisioneDiv = $("<div>").addClass("revisione card");
-    const infoDiv = $("<div>").addClass("info");
-    const revisioneNumberDiv = $("<div>").html('Revisione: <span class="numero">' + revisione.numero + "</span>").appendTo(infoDiv);
-    const dataRevDiv = $("<div>").html('Data della revisione: <span class="dataRev">' + '<input type="date" value="' + revisione.dataRev + '" disabled></input>' + "</span>").appendTo(infoDiv);
-    const targaNumberDiv = $("<div>").html('Targa associata: <span class="targa">' + revisione.targa + "</span>").appendTo(infoDiv);
-    const esitoSelect = $("<select>").addClass("esito").prop("disabled", true); // Disable select element initially
-    $("<option>").val("positive").text("Positivo").appendTo(esitoSelect);
-    $("<option>").val("negative").text("Negativo").appendTo(esitoSelect);
-    if (revisione.esito === "positive") {
-        esitoSelect.val("positive");
-    } else if (revisione.esito === "negative") {
-        esitoSelect.val("negative");
-    }
-    const esitoDiv = $("<div>").html("Esito: ").append(esitoSelect).appendTo(infoDiv);
-    const motivazioneDiv = $("<div>").addClass("motivazioneDiv").css("display", "none").html('Motivazione: <span class="motivazione"><textarea class="motivazione" oninput="autoResize()" type="text" required disabled></textarea></span>').appendTo(infoDiv);
-    if (revisione.esito == "negative") {
-        motivazioneDiv.toggle(revisione.esito === "negative");
-        motivazioneDiv.find(".motivazione textarea").val(revisione.motivazione);
-    }
-    infoDiv.appendTo(revisioneDiv);
-    // info buttons
-    const btnsDiv = $("<div>").addClass("action-btn");
-    var discardChangeBtn = $("<button>").addClass("discard-changes").html('<i class="fa-solid fa-arrow-left"></i>').hide().appendTo(btnsDiv);
-    const detailsButton = $("<button>").html("Scopri di più" + '<i class="fa-solid fa-circle-info"></i>').addClass("detail-button");
-    detailsButton.appendTo(btnsDiv);
-    detailsButton.on("click", function () {
-        revisioneDetailsBtnClicked(revisione);
-    });
-
-    // Edit and remove buttons
-    const removeButton = $("<button>").addClass("remove-button");
-    removeButton.on("click", function () {
-        deleteBtnClicked(revisione.numero);
-    });
-    const editButton = await createEditButton(revisioneDiv, removeButton, discardChangeBtn, detailsButton);
-    removeButton.html('<i class="fas fa-trash-alt"></i>'); // This adds a trash icon
-    editButton.appendTo(btnsDiv);
-    removeButton.appendTo(btnsDiv);
-    btnsDiv.appendTo(revisioneDiv);
-
-    return revisioneDiv;
-}*/
 
 async function createRevisioneCardComponent(revisione) {
     const revisioneDiv = $("<div>").addClass("card mb-3");
@@ -125,12 +82,12 @@ async function createRevisioneCardComponent(revisione) {
     // info buttons
     const btnsDiv = $("<div>").addClass("px-2 mb-3 mt-auto d-flex justify-content-between gap-2");
     var discardChangeBtn = $("<button>").addClass("discard-changes btn").html('<i class="fa-solid fa-arrow-left"></i>').hide().appendTo(btnsDiv);
-    const detailsButton = $("<button>").html("Scopri di più" + '<i class="fa-solid fa-circle-info ms-2"></i>').addClass("btn me-auto");
+    const detailsButton = $("<button>").html(`<a class="link-light link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="/vehicle-revisions/revision-details/${revisione.id}/">Scopri di più<i class="fa-solid fa-circle-info ms-2"></i></a>`).addClass("btn me-auto");
 
     detailsButton.appendTo(btnsDiv);
-    detailsButton.on("click", function () {
+    /*detailsButton.on("click", function () {
         revisioneDetailsBtnClicked(revisione);
-    });
+    });*/
 
     // Edit and remove buttons
     const removeButton = $("<button>").addClass("btn remove-button");
@@ -147,37 +104,34 @@ async function createRevisioneCardComponent(revisione) {
 }
 
 async function createRevisioneDetailComponent(revisione) {
-    const revisioneDiv = $("<div>").addClass("revisione card");
-    const infoDiv = $("<div>").addClass("info");
-    const revisioneNumberDiv = $("<div>").html('Revisione: <span class="numero">' + revisione.numero + "</span>").appendTo(infoDiv);
-    const dataRevDiv = $("<div>").html('Data della revisione: <span class="dataRev">' + '<input type="date" value="' + revisione.dataRev + '" disabled></input>' + "</span>").appendTo(infoDiv);
-    const targaNumberDiv = $("<div>").html('Targa associata: <span class="targa">' + revisione.targa + "</span>").appendTo(infoDiv);
+    const revisioneDiv = $("<div>").addClass("card mb-3");
+    const infoDiv = $("<div>").addClass("card-body text-dark mt-2");
+    const revisioneNumberDiv = $("<div>").addClass("card-title fw-bold mt-2").html('Revisione:   <span class="numero">' + revisione.id + "</span>").appendTo(infoDiv);
+    const dataRevDiv = $("<div>").addClass("card-text mt-2").html('Data della revisione: <span class="dataRev">' + '<input type="date" value="' + revisione.revision_date + '" disabled></input>' + "</span>").appendTo(infoDiv);
+    const targaNumberDiv = $("<div>").addClass("card-text mt-2").html('Targa associata: <span class="targa p-1">' + revisione.plate_number_id + "</span>").appendTo(infoDiv);
     const esitoSelect = $("<select>").addClass("esito").prop("disabled", true); // Disable select element initially
     $("<option>").val("positive").text("Positivo").appendTo(esitoSelect);
     $("<option>").val("negative").text("Negativo").appendTo(esitoSelect);
     if (revisione.esito === "positive") {
         esitoSelect.val("positive");
-    } else if (revisione.esito === "negative") {
+    } else if (revisione.outcome === "negative") {
         esitoSelect.val("negative");
     }
-    const esitoDiv = $("<div>").html("Esito: ").append(esitoSelect).appendTo(infoDiv);
-    const motivazioneDiv = $("<div>").addClass("motivazioneDiv").css("display", "none").html('Motivazione: <span class="motivazione"><textarea class="motivazione" oninput="autoResize()" required disabled></textarea></span>').appendTo(infoDiv);
-    if (revisione.esito == "negative") {
-        motivazioneDiv.toggle(revisione.esito === "negative");
-        motivazioneDiv.find(".motivazione textarea").val(revisione.motivazione);
+    const esitoDiv = $("<div>").addClass("card-text mt-2").html("Esito: ").append(esitoSelect).appendTo(infoDiv);
+    const motivazioneDiv = $("<div>").addClass("motivazioneDiv card-text mt-2").css("display", "none").html('Motivazione: <span class="motivazione"><textarea class="motivazione" oninput="autoResize()" type="text" required disabled></textarea></span>').appendTo(infoDiv);
+    if (revisione.outcome == "negative") {
+        motivazioneDiv.toggle(revisione.outcome === "negative");
+        motivazioneDiv.find(".motivazione textarea").val(revisione.motivation);
     }
     infoDiv.appendTo(revisioneDiv);
     // info buttons
-    const btnsDiv = $("<div>").addClass("action-btn");
-    // const detailsButton = $('<button>').html('Scopri di più' + '<i class="fa-solid fa-circle-info"></i>').addClass('detail-button');
-    // detailsButton.appendTo(btnsDiv)
-    // detailsButton.on('click', function() {revisioneDetailsBtnClicked(revisione)});
-    var discardChangeBtn = $("<button>").addClass("discard-changes").html('<i class="fa-solid fa-arrow-left"></i>').hide().appendTo(btnsDiv);
+    const btnsDiv = $("<div>").addClass("px-2 mb-3 mt-auto d-flex justify-content-between gap-2");
+    var discardChangeBtn = $("<button>").addClass("discard-changes btn").html('<i class="fa-solid fa-arrow-left"></i>').hide().appendTo(btnsDiv);
 
     // Edit and remove buttons
-    const removeButton = $("<button>").addClass("remove-button");
+    const removeButton = $("<button>").addClass("btn remove-button");
     removeButton.on("click", function () {
-        deleteBtnClicked(revisione.numero);
+        deleteBtnClicked(revisione.id);
     });
     const editButton = await createEditButton(revisioneDiv, removeButton, discardChangeBtn);
     removeButton.html('<i class="fas fa-trash-alt"></i>'); // This adds a trash icon
@@ -192,9 +146,9 @@ function revisioneDetailsBtnClicked(revisione) {
     viewRevisioneDetails(revisione);
 }
 
-function viewRevisioneDetails(revisione) {
-    window.location.href = "/pages/revisione/dettagli-revisione.php?id=" + revisione.numero;
-}
+/*function viewRevisioneDetails(revisione) {
+    window.location.href = `/vehicle-revisions/revision-details/${revisione.id}/`;
+}*/
 
 function deleteBtnClicked(numeroRev) {
     const id = numeroRev;

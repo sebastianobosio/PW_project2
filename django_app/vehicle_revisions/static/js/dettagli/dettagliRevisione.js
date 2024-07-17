@@ -13,18 +13,18 @@ export function initializePage() {
         async function fetchRevisioneDetails(id) {
             try {
                 const revisioneResponse = await new Promise((resolve, reject) => {
-                    handleAjaxRequest("/php/search_revisione.php", // URL to fetch car details from the server
-                            "GET", "numero=" + id + "&action=read",
+                    handleAjaxRequest("/vehicle-revisions/revision-search/", // URL to fetch car details from the server
+                            "GET", "numero=" + id,
                     resolve, reject);
                 });
                 if (revisioneResponse.success == true) {
                     const revisione = revisioneResponse.data[0];
-                    $("#titolo").html("<h1>Dettagli sulla revisione " + revisione.numero + "</h1>");
+                    $("#titolo").html("<h1>Dettagli sulla revisione " + revisione.id + "</h1>");
                     const revisioneComponent = await renderRevisioneDetail(revisione); // here i shoul render it with a different style component
                     revisioneComponent.appendTo($("#revisione"));
-
+                    console.log(revisione)
                     const targaResponse = await new Promise((resolve, reject) => {
-                        handleAjaxRequest("/php/search_targa.php", "GET", "targa=" + revisione.targa, resolve, reject);
+                        handleAjaxRequest("/vehicle-revisions/plate-search/", "GET", "targa=" + revisione.plate_number_id, resolve, reject);
                     });
                     if (targaResponse.success == true) {
                         var targa = targaResponse.data[0];
@@ -38,7 +38,7 @@ export function initializePage() {
                     }
 
                     const veicoloResponse = await new Promise((resolve, reject) => {
-                        handleAjaxRequest("/php/search_veicolo.php", "GET", "telaio=" + targa.veicolo, resolve, reject);
+                        handleAjaxRequest("/vehicle-revisions/vehicle-search/", "GET", "telaio=" + targa.vehicle_number_id, resolve, reject);
                     });
                     if (veicoloResponse.success == true) {
                         var veicolo = veicoloResponse.data[0];
@@ -63,8 +63,9 @@ export function initializePage() {
         }
 
         // Get car ID from URL query parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const revisioneNumber = urlParams.get("id");
+        const url = window.location.pathname 
+        const segments = url.split('/');
+        const revisioneNumber = segments.filter(segment => segment !== '').pop();
 
         // Fetch car details based on the ID
         fetchRevisioneDetails(revisioneNumber);
@@ -72,6 +73,6 @@ export function initializePage() {
 }
 
 export function returnToMotherPage() {
-    var motherURL = "/pages/revisioni.php";
+    var motherURL = "/vehicle-revisions/revision-search/";
     window.location.href = motherURL;
 }

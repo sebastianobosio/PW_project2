@@ -1,5 +1,6 @@
 import {checkRevision} from "./checkRevisionFields.js";
 import {handleAjaxError, handleResponse} from "./handleAjax.js";
+import { checkIfChildPage } from "./loadRevisions.js";
 
 // this module handle the addRevisionForm that is present in dettaglio-veicolo/targa and revisione
 export function toggleFormVisibility(state, targaNumber) {
@@ -32,7 +33,7 @@ export function performAddAction(formData, callback) {
 
         if (page.endsWith("revision-search/")) {
             resetForm(false); // Reset all fields
-        } else if (page.endsWith("dettagli-targa.php") || page.endsWith("dettagli-veicolo.php")) {
+        } else if (checkIfChildPage('plate-details', page) || checkIfChildPage('vehicle-details', page)) {
             resetForm(true); // Reset all fields except targa
         }
         // handle response is a simple function that print the message and make the callback if a function is passed.
@@ -59,9 +60,11 @@ export function hideAddForm(event) { // when the form is submitted the fields ar
         $(".addFormDiv").toggle("slow");
         $("#addForm").attr("novalidate", true);
         var page = window.location.pathname;
-        if (page.endsWith("revisioni.php")) {
+        console.log("porco dio")
+        if (page.endsWith("revision-search/")) {
             resetForm(false); // Reset all fields
-        } else if (page.endsWith("dettagli-targa.php") || page.endsWith("dettagli-veicolo.php")) {
+        } else if (checkIfChildPage('plate-details', page) || checkIfChildPage('vehicle-details', page)) {
+
             resetForm(true); // Reset all fields except targa
         }event.preventDefault();
     }

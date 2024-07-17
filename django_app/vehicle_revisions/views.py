@@ -185,6 +185,10 @@ def revision_search(request):
     return render(request, 'revision-search.html')
 
 
+def revision_details(request, id):
+    return render(request, 'revision-details.html')
+
+
 def edit_revision(request, id):
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         new_revdate = request.POST.get('editDataRev', None)

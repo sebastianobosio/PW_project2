@@ -18,11 +18,11 @@ function createVeicoloCardComponent(veicolo) {
     const veicoloProdDateDiv = $('<p>').addClass('card-text').text('Data di produzione: ' + veicolo.prod_date).appendTo(infoDiv);
     
     const detailsBtnDiv = $('<div>').addClass('ps-2 mb-3 action-button mt-auto');
-    const detailsButton = $('<button>').html('Scopri di più' + '<i class="fa-solid fa-circle-info ms-2"></i>').addClass('btn detail-button');
+    const detailsButton = $('<button>').html(`<a class="link-light link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="/vehicle-revisions/vehicle-details/${veicolo.number}/">Scopri di più<i class="fa-solid fa-circle-info ms-2"></i></a>`).addClass('btn detail-button');
     
-    detailsButton.on('click', function() {
+    /*detailsButton.on('click', function() {
         veicoloDetailsBtnClicked(veicolo);
-    });
+    });*/
 
     infoDiv.appendTo(vehicleDiv);
     detailsButton.appendTo(detailsBtnDiv);

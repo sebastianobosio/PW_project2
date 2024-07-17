@@ -20,8 +20,8 @@ export function initializePage() {
     $(document).ready(function () {
         $("#addForm").submit(function (event) {
             event.preventDefault();
-            var formData = $(this).serialize() + "&addTarga=" + targa.numero + "&action=create";
-            addFormSubmitted(event, formData, () => loadRevisioniDiv(targa.numero));
+            var formData = $(this).serialize() + "&addTarga=" + targa.number;
+            addFormSubmitted(event, formData, () => loadRevisioniDiv(targa.number));
         });
         $("#addEsito").change(addEsitoChanged); // need to be copied for the #editEsitoS
 
@@ -33,7 +33,7 @@ export function initializePage() {
         async function fetchTargaDetails(id) {
             try {
                 const targaResponse = await new Promise((resolve, reject) => {
-                    handleAjaxRequest("/php/search_targa.php", // URL to fetch car details from the server
+                    handleAjaxRequest("/vehicle-revisions/plate-search/", // URL to fetch car details from the server
                             "GET", "targa=" + id,
                     resolve, reject);
                 });
@@ -41,12 +41,12 @@ export function initializePage() {
                     targa = targaResponse.data[0];
                     const targaStatus = targa.status;
                     const state = targaStatus == "active";
-                    $("#titolo").html("<h1>Dettagli sulla targa " + targa.numero + "</h1>");
+                    $("#titolo").html("<h1>Dettagli sulla targa " + targa.number + "</h1>");
                     const targaComponent = renderTargaDetail(targa);
                     targaComponent.appendTo($("#targa"));
 
                     const veicoloResponse = await new Promise((resolve, reject) => {
-                        handleAjaxRequest("/php/search_veicolo.php", "GET", "telaio=" + targa.veicolo, resolve, reject);
+                        handleAjaxRequest("/vehicle-revisions/vehicle-search/", "GET", "telaio=" + targa.vehicle_number_id, resolve, reject);
                     });
                     if (veicoloResponse.success == true) {
                         var veicolo = veicoloResponse.data[0];
@@ -62,8 +62,8 @@ export function initializePage() {
                         // non dovrebbe mai accadere. Ogni targa ha almeno un veicolo per costruzione del db
                     }
                     // Add form only if the plate is active
-                    toggleFormVisibility(state, state ? targa.numero : null);
-                    loadRevisioniDiv(targa.numero);
+                    toggleFormVisibility(state, state ? targa.number : null);
+                    loadRevisioniDiv(targa.number);
                 } else {
                     alert("Non sono state trovate corrispondenze");
                     returnToMotherPage();
@@ -87,7 +87,7 @@ export function initializePage() {
 }
 
 function returnToMotherPage() {
-    var motherURL = "/pages/targhe.php";
+    var motherURL = "/vehicle-revisions/plate-search/";
     window.location.href = motherURL;
 }
 

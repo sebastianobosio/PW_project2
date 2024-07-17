@@ -1,0 +1,41 @@
+{% extends "base_generic.html" %}
+{% block title %}<title>Dettaglio targa</title>{% endblock %}
+{% load static %}
+{% block style %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static '/css/genericCard.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/dettagliStyle.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/revisioneCard.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/targaCard.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/addForm.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/textarea.css' %}" />
+{% endblock %}
+{% block scripts %}
+    <script src="{% static '/js/ajaxHelper.js' %}"></script>
+    <script src="{% static '/js/resizeMotivazioneField.js' %}"></script>
+    <script type="module"
+    src="{% static '/js/renderComponents/renderRevisione.js' %}"></script>
+    <script type="module"
+            src="{% static '/js/initPages/initDettagliRevisione.js' %}"></script>
+{% endblock %}
+{% block content %}
+    <div class="titolo-container d-flex justify-content-between align-items-center pb-2">
+        <div id="titolo"></div>
+    </div>
+    <div id="dettagli-content">
+        <div class="revisione">
+            <div class="titolo"></div>
+            <div id="revisione" class="d-flex flex-wrap gap-3"></div>
+        </div>
+
+        <div class="veicolo mt-2">
+            <div class="titolo"></div>
+            <div id="veicolo" class="d-flex flex-wrap gap-3"></div>
+        </div>
+        <div class="targa mt-2">
+            <div class="titolo"></div>
+            <div id="targa" class="d-flex flex-wrap gap-3"></div>
+        </div>
+    </div>
+{% endblock %}
+
