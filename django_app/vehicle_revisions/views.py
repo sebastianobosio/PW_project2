@@ -8,6 +8,11 @@ def index(request):
     return render(request, 'index.html')
 
 
+# Questa view (o controller) fa due cose: Quando la pagina viene caricata viene renderizzato il relativo template
+# A questo punto, una volta caricato, lo script javascript fa una automatica chiamata ajax sempre a questa view simulando una ricerca
+# vuota, generale. In questo caso i filtri sono inutili. Invece quando si riempiono i campi del form di ricerca
+# i dati vengono filtrati. Il risultato è in formato Jsono e poi renderizzato dal javascript.
+# Tutte le view di ricerca funzionano allo stesso modo
 def vehicle_search(request):
     if request.method == 'GET' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         number = request.GET.get('telaio', '')
@@ -39,6 +44,9 @@ def vehicle_search(request):
     return render(request, 'vehicle-search.html')
 
 
+# Questa view invece renderizza il template per la pagina dei dettagli veicolo. Anche in questo caso è il javascript ad occuparsi della visualizzazione dei dati
+# Infatti fa delle chiamate ad alcune view per ricevere i dati sul veicolo, sulle targhe avute dal veicolo e su tutte le revisioni associate.
+# Tutte le view di dettaglio sono simili.
 def vehicle_details(request, id):
     return render(request, 'vehicle-details.html')
 
@@ -51,6 +59,11 @@ def plate_search(request):
         res_date = request.GET.get('dataRes', '')
         status = request.GET.get('status', '')
 
+        # Per il filtraggio delle targhe la situazione era un po' più complessa per due motivi. 
+        # perchè le tabelle ActivePlate e InactivePlate non hanno il campo status, ma è necessario che sia presente
+        # nell'output perché utile al frontend (vedi renderTarga.js). Quindi è necessaria la funzione add_status(). 
+        # Poi la ricerca avviene su due tabelle separate ActivePlate e InactivePlate, ma quando si vogliono cercare
+        # sia targhe attive che non bisogna fare la ricerca prima su una, poi sull'altra ed infine unire i risultati
         def filter_data(queryset):
             if number:
                 queryset = queryset.filter(number=number)
@@ -100,10 +113,13 @@ def plate_search(request):
 
 
 def plate_details(request, id):
-    print("ciao")
     return render(request, 'plate-details.html')
 
 
+# Anche per questa view ci sono state alcune complicazioni. Questa view è chiamata per rispondere a due tipi di chiamate
+# Per fare il fetch data una targa, oppure un'array di targa (quando si è nella pagina vehicle-details.html il file js dettagliVeicolo.JsonResponse
+# prende tutte le targhe avute dal veicolo, le mette in un array e fa una chiamata qui per prendere tutte le revisioni relative
+# a tutte le targhe). Quindi bisogogna distinugere i due casi. Nel caso dell'array bisogna svolgere lo stesso procedimento per ogni targa.
 def revision_search(request):
     def filter_data(queryset, filters):
         number = filters.get('number')
@@ -188,7 +204,9 @@ def revision_search(request):
 def revision_details(request, id):
     return render(request, 'revision-details.html')
 
-
+# Qui ci sono le view per le CRUD operazioni. L'edit è fattibile direttamente dalla card revisione, così come il delete. 
+# Invece la creazione viene fatta dal form sul lato destro della pagina che è presente nella pagina
+# revision-search/, vehicle-details/ e plate-details/ (questa solo se la targa è attiva)
 def edit_revision(request, id):
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         new_revdate = request.POST.get('editDataRev', None)
@@ -248,7 +266,3 @@ def delete_revision(request, id):
         }
         return JsonResponse(response)
     return JsonResponse({"errors": "not an ajax request"}, status=400)
-
-
-def vehicle_details(request, id):
-    return render(request, 'vehicle-details.html')

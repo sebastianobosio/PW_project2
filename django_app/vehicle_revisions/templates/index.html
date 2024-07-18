@@ -2,34 +2,92 @@
 {% block content %}
     <div class="content">
         <!-- This is where the results will be displayed -->
-        <h1>Benvenuti</h1>
-        <h4>In questo sito è possible effettuare le seguenti operazioni</h4>
-        <ul>
-            <li>Cercare informazioni su un veicolo tramite la targa</li>
-            <li>Verificare lo stato di revisione di un veicolo</li>
-            <li>Visualizzare informazioni dettagliate su un veicolo e la sua storia</li>
-        </ul>
-        <p>Effettua queste ricerche navigando tra le pagine a lato</p>
-        <p>
-            Le modifiche delle revisioni possono essere effettuate direttamente dalla card.
-            Sia per le modifiche che per l'aggiunta vengono effettuati dei controlli sui campi.
-            Se i controlli falliscono oppure si torna indietro (con il bottone in basso a sinistra della card) vengono ripristinati i valori originari.
-            Nelle pagine dettaglio-targa/veicolo il form di aggiunta revisione è già riempito
-            con la targa o targa-attiva. Form che è presente solo se il veicolo è targato con targa attiva.
-            All'aggiunta di una revisione, di un edit o di un delete la pagina viene aggiornata in maniere diverse a seconda del tipo di pagina e modifica che è stata effettuata.
-            Ad esempio in dettaglio-targa/ dettaglio-veicolo l'eliminazione di una revisione, o il cambio di targa comporta un reload della sola parte dedicata alle revisioni.
-            Invece in dettaglio-revisione la cancellazione della revisione riporta alla pagina principale.
-            L'aggiunta di una nuova revisione comporta sempre un ricaricamento di queste.
-        </p>
-        <p>I dati sono stati generati tramite uno script python che crea un database SQL importabile su PHPMyAdmin</p>
-        <p>
-            Targhe e revisioni sono caricati in ordine di data di emissione e revisione rispettivamente, così che la targa attiva riferita al veicolo sia sempre la prima.
-        </p>
-        <p>
-            Il form per la ricerca viene resettato ad ogni ricerca, mentre l'addForm solo sia al submit che quando viene chiuso.
-        </p>
-        <p>
-            Sarebbe bello implementare anche un sistema di paginazione, così da non caricare le card tutte insieme. Cosa che potrebbe essere problematica quando il database è pieno.
-        </p>
+        <div>
+            <h1>Benvenuti</h1>
+            <h4>In questo sito è possible effettuare le seguenti operazioni</h4>
+            <ul>
+                <li>Cercare informazioni su un veicolo tramite la targa</li>
+                <li>Verificare lo stato di revisione di un veicolo</li>
+                <li>Visualizzare informazioni dettagliate su un veicolo e la sua storia</li>
+            </ul>
+            <p>Effettua queste ricerche navigando tra le pagine a lato</p>
+        </div>
+        <div>
+            <h2>Alcune informazione sullo sviluppo</h2>
+            <p>
+                La struttura del sito è stata mantenuta identica come da linea guida. Il backend
+                ha lo scopo di accedere al database (tramite i modelli di Django). Il frontend invece, come
+                anche il primo progetto, è stato sviluppato con JQuery e tramite chiamate ajax interroga il backend
+                per avere indietro risultati in formato Json che saranno poi renderizzati in componenti dalle appostite
+                funzioni javascript.
+            </p>
+            <p>
+                Avendo già sviluppato il frontend per il primo progetto ho cercato di riadattare quell'implementazione anche per il second progetto
+                in modo da riutilizzare il più possibile il codice. Ho dovuto principalmente riadattare alcuni nomi dei campi e gli endpoint delle chiamate ajax
+            </p>
+            <p>
+                Per il database ho usato PostgreSQL. I dati sono stati creati con uno script python simile a quello usato per il primo progetto,
+                solamente modificando la sintassi da MySQL a PostgreSQL. Django poi permette tramite un comando di creare automaticamente
+                dei modelli che si interfacciano al database data la sua struttura <pre><code>python manage.py inspectdb > models.py</code></pre>
+                Sono però state necessarie alcune modifiche, sopratutto per la presenza di spazi o maiuscole che Django non sopporta.
+            </p>
+            <p>
+                Le modifiche delle revisioni possono essere effettuate direttamente dalla card.
+                Sia per le modifiche che per l'aggiunta vengono effettuati dei controlli sui campi.
+                Se i controlli falliscono oppure si torna indietro (con il bottone in basso a sinistra della card) vengono ripristinati i valori originari.
+                Nelle pagine dettaglio-targa/veicolo il form di aggiunta revisione è già riempito
+                con la targa o targa-attiva. Form che è presente solo se il veicolo è targato con targa attiva.
+                All'aggiunta di una revisione, di un edit o di un delete la pagina viene aggiornata in maniere diverse a seconda del tipo di pagina e modifica che è stata effettuata.
+                Ad esempio in dettaglio-targa/ dettaglio-veicolo l'eliminazione di una revisione, o il cambio di targa comporta un reload della sola parte dedicata alle revisioni.
+                Invece in dettaglio-revisione la cancellazione della revisione riporta alla pagina principale.
+                L'aggiunta di una nuova revisione comporta sempre un ricaricamento di queste.
+            </p>
+            <p>I dati sono stati generati tramite uno script python che crea un database SQL importabile su PHPMyAdmin</p>
+            <p>
+                Targhe e revisioni sono caricati in ordine di data di emissione e revisione rispettivamente, così che la targa attiva riferita al veicolo sia sempre la prima.
+            </p>
+            <p>
+                Il form per la ricerca viene resettato ad ogni ricerca, mentre l'addForm solo sia al submit che quando viene chiuso.
+            </p>
+            <p>
+                Sarebbe bello implementare anche un sistema di paginazione, così da non caricare le card tutte insieme. Cosa che potrebbe essere problematica quando il database è pieno.
+            </p>
+        </div>
+        <div>
+            <h2>Dove trovare l'applicazione</h2>
+            <p>
+                L'applicazione si trova sul mio <a class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+    href="https://github.com/sebastianobosio/PW_project2">github</a>. Questa deve essere clonata in locale con git oppure scaricata come <em>.zip</em> dal sito di github.
+            </p>
+            <h2>Come installare l'applicazione in locale</h2>
+            <h3>Dipendeze python</h3>
+            <p>
+                Per gestire le dipendende del progetto ho scelto di usare <em>Poetry</em>, che permette di tener traccia delle dipendenze
+                necessarie al progetto, insieme alla loro versione, per poter velocemente trasferire il progetto su una nuova macchina.
+                Tuttavia le dipendenze necessarie sono solo due: <em>psycopg2</em> e <em>django</em>.
+                Per installare usare <pre><code>python -m pip install django psycopg2</code></pre> anche se probabilmente saranno già installate
+            </p>
+            <h3>Creazione e connessione database</h3>
+            <p>
+                Per creare il database bisogna creare prima il database usando PgAdmin con nome <em>sebastianobosiopsql</em>
+            </p>
+            <p>
+                Poi eseguire il comando da linea di comando <pre><code>pg_dump -h 127.0.0.1 -p 5432 sebastianobosiopsql < vehicle_database.sql</code></pre>
+            </p>
+            Il file <em>vehicle_database.sql</em> è il file generato dallo script python. Nel comando precendente bisogna inserire tutto il percorso di questo file.
+            Il file si trova sotto alla cartella <em>db</em> del mio progetto.
+            In questo modo il database viene riempito con il dump file.
+            <p>
+                Ora bisogna andare sotto a <em>PW_project2/django_app/django_app</em> ed aprire il file <em>settings.py</em>
+                Una volta aperto recarsi alla sezione <em>DATABASE</em> e modifare <em>USER</em> e <em>PASSWORD</em>
+                con le proprie con le quali avete creato il database.
+            </p>
+            <h3>Eseguire l'applicazione</h3>
+            <p>
+                Per eseguire l'applicazione recarsi in <em>PW_project2/django_app/</em> ed eseguire il comando
+                <pre><code>python manage.py runserver</code></pre>
+                Poi andare al <em>127.0.0.1:8000/vehicle-revisions</em> con un browser qualsiasi.
+            </p>
+        </div>
     </div>
 {% endblock %}
