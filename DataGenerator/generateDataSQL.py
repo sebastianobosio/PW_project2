@@ -3,11 +3,10 @@ from datetime import datetime, timedelta
 
 motivation_list = [
     "Veicolo non superato il test delle emissioni",
-    "Scoperte problematiche di sicurezza durante l''ispezione",
+    "Scoperte problematiche di sicurezza",
     "Violazione delle leggi sul traffico",
     "Targa danneggiata o manomessa",
     "Documentazione errata presentata",
-    "Proprietario precedente non ha rivelato problemi",
     "Veicolo coinvolto in incidente",
     "Non conformità alle normative",
     "Falsificazione o contraffazione di documenti",
@@ -16,7 +15,7 @@ motivation_list = [
     "Registrazione scaduta",
     "Modifiche improprie apportate al veicolo",
     "Registrazione fraudolenta",
-    "Veicolo considerato non sicuro per l''uso su strada",
+    "Veicolo considerato non sicuro",
     "Mancato pagamento di multe o tasse",
     "Mancato pagamento di imposte",
     "Modifiche illegali apportate al veicolo",
@@ -65,10 +64,12 @@ sql_statements.append('''CREATE TABLE IF NOT EXISTS Revisions (
 
 # Function to generate random vehicle data
 def generate_vehicle_data():
-    models = ['SUV', 'Sedan', 'Truck', 'Hatchback', 'Convertible', 'Coupe', 'Minivan', 'Crossover', 'Sports Car']
+    models = ['SUV', 'Sedan', 'Truck', 'Hatchback', 'Convertible',
+              'Coupe', 'Minivan', 'Crossover', 'Sports Car']
     brands = ['Toyota', 'Ford', 'Honda', 'Chevrolet', 'BMW', 'Audi', 'Mercedes-Benz', 'Volkswagen', 'Nissan', 'Hyundai',
               'Kia', 'Subaru', 'Mazda', 'Volvo', 'Jeep', 'Lexus', 'Tesla', 'Ferrari', 'Porsche', 'Jaguar']
-    number = ''.join(random.choices('0123456789', k=7))  # Generating a random 7-digit number
+    # Generating a random 7-digit number
+    number = ''.join(random.choices('0123456789', k=7))
     model = random.choice(models)
     brand = random.choice(brands)
     # vehicles are one to two years old.
@@ -94,7 +95,7 @@ def generate_inactive_plate_data(plate_data, vehicle_number, next_emission_date=
                 days=random.randint(1, (next_emission_date - plate_data[1]).days - 5))
             break  # Exit the loop if no ValueError occurs
         except ValueError:
-            print("ciao");
+            print("ciao")
             pass  # If ValueError occurs, continue to the next iteration
 
     return (plate_data[0], vehicle_number, restitution_date)
@@ -121,7 +122,8 @@ for j in range(100):
     for _ in range(0, random.randint(0, 2)):
         # new emission date is 30 to 50 days after the previous one. plates[-1] pick the last item in the list.
         # the number are picked so i can be sure that they don't overlap
-        new_emission_date = plates[-1][1] + timedelta(days=random.randint(30, 50))
+        new_emission_date = plates[-1][1] + \
+            timedelta(days=random.randint(30, 50))
         plates.append(generate_plate_data(new_emission_date))
 
     # Sort plates by emission date, descrecent order
@@ -143,16 +145,35 @@ for j in range(100):
                 revision_date = active_plate_data[1] + timedelta(
                     days=random.randint(1, (datetime.now() - active_plate_data[1]).days))
                 outcome = random.choice(['positive', 'negative'])
-                motivation = random.choice(motivation_list) if outcome == 'negative' else None
-                sql_statements.append(
-                    f"INSERT INTO Revisions (plateNumber, revisionDate, outcome, motivation) VALUES ('{active_plate_data[0]}', '{revision_date.strftime('%Y-%m-%d')}', '{outcome}', {'NULL' if motivation is None else f'\'{motivation}\''});")
+                if outcome == 'negative':
+                    motivation = random.choice(motivation_list)
+                else:
+                    motivation = None
+
+                if motivation is None:
+                    motivation_value = 'NULL'
+                else:
+                    motivation_value = f"'{motivation.replace('\'', '\'\'')}'"
+
+                # Create the SQL statement
+                sql = (
+                    f"INSERT INTO Revisions (plateNumber, revisionDate, outcome, motivation) VALUES ("
+                    f"'{active_plate_data[0]}', "
+                    f"'{revision_date.strftime('%Y-%m-%d')}', "
+                    f"'{outcome}', "
+                    f"{motivation_value});"
+                )
+                sql_statements.append(sql)
+
 
         # The other plates will be inactive
         for i in range(1, len(plates)):
             # here is a bit difficult because names. The previous_emission_date is in fact the next_emission_date
             # because the most recent is at index 0 of the plates list
-            previous_emission_date = plates[i - 1][1] if i > 0 else plates[i][1]
-            inactive_plate_data = generate_inactive_plate_data(plates[i], vehicle_number, previous_emission_date)
+            previous_emission_date = plates[i -
+                                            1][1] if i > 0 else plates[i][1]
+            inactive_plate_data = generate_inactive_plate_data(
+                plates[i], vehicle_number, previous_emission_date)
             sql_statements.append(
                 f"INSERT INTO InactivePlates VALUES ('{plates[i][0]}', '{plates[i][1].strftime('%Y-%m-%d')}', '{vehicle_number}', '{inactive_plate_data[2].strftime('%Y-%m-%d')}');")
             sql_statements.append(
@@ -169,17 +190,34 @@ for j in range(100):
                         except ValueError:
                             print("ciao")
                             pass
-                    outcome = random.choice(['positive', 'negative'])
-                    motivation = random.choice(motivation_list) if outcome == 'negative' else None
-                    sql_statements.append(
-                        f"INSERT INTO Revisions (plateNumber, revisionDate, outcome, motivation) VALUES ('{plates[i][0]}', '{revision_date.strftime('%Y-%m-%d')}', '{outcome}', {'NULL' if motivation is None else f'\'{motivation}\''});")
+                    if outcome == 'negative':
+                        motivation = random.choice(motivation_list)
+                    else:
+                        motivation = None
+
+                    if motivation is None:
+                        motivation_value = 'NULL'
+                    else:
+                        motivation_value = f"'{motivation.replace('\'', '\'\'')}'"
+
+                    # Create the SQL statement
+                    sql = (
+                        f"INSERT INTO Revisions (plateNumber, revisionDate, outcome, motivation) VALUES ("
+                        f"'{plates[i][0]}', "
+                        f"'{revision_date.strftime('%Y-%m-%d')}', "
+                        f"'{outcome}', "
+                        f"{motivation_value});"
+                    )
+                    sql_statements.append(sql)
     # the vehicle will not have an active plate
     else:
         if random.choice([True, False]):
             # Only inactive plates
             for i in range(0, len(plates)):
-                previous_emission_date = datetime.now() if i == 0 else plates[i - 1][1]
-                inactive_plate_data = generate_inactive_plate_data(plates[i], vehicle_number, previous_emission_date)
+                previous_emission_date = datetime.now(
+                ) if i == 0 else plates[i - 1][1]
+                inactive_plate_data = generate_inactive_plate_data(
+                    plates[i], vehicle_number, previous_emission_date)
                 sql_statements.append(
                     f"INSERT INTO InactivePlates VALUES ('{plates[i][0]}', '{plates[i][1].strftime('%Y-%m-%d')}', '{vehicle_number}', '{inactive_plate_data[2].strftime('%Y-%m-%d')}');")
                 sql_statements.append(
@@ -191,13 +229,27 @@ for j in range(100):
                             days=random.randint(1, (inactive_plate_data[2] - plates[i][1]).days))
                         break
                     except ValueError:
-                        print("ciao");
+                        print("ciao")
                         pass
-                outcome = random.choice(['positive', 'negative'])
-                motivation = random.choice(motivation_list) if outcome == 'negative' else None
-                sql_statements.append(
-                    f"INSERT INTO Revisions (plateNumber, revisionDate, outcome, motivation) VALUES ('{plates[i][0]}', '{revision_date.strftime('%Y-%m-%d')}', '{outcome}', {'NULL' if motivation is None else f'\'{motivation}\''});")
+                if outcome == 'negative':
+                    motivation = random.choice(motivation_list)
+                else:
+                    motivation = None
 
+                if motivation is None:
+                    motivation_value = 'NULL'
+                else:
+                    motivation_value = f"'{motivation.replace('\'', '\'\'')}'"
+
+                # Create the SQL statement
+                sql = (
+                    f"INSERT INTO Revisions (plateNumber, revisionDate, outcome, motivation) VALUES ("
+                    f"'{plates[i][0]}', "
+                    f"'{revision_date.strftime('%Y-%m-%d')}', "
+                    f"'{outcome}', "
+                    f"{motivation_value});"
+                )
+                sql_statements.append(sql)
         else:
             pass  # No plates for this vehicle
 
