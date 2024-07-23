@@ -154,7 +154,7 @@ for j in range(100):
                 if motivation is None:
                     motivation_value = 'NULL'
                 else:
-                    motivation_value = f"'{motivation.replace('\'', '\'\'')}'"
+                    motivation_value = f"{motivation}"
 
                 # Create the SQL statement
                 sql = (
@@ -162,7 +162,7 @@ for j in range(100):
                     f"'{active_plate_data[0]}', "
                     f"'{revision_date.strftime('%Y-%m-%d')}', "
                     f"'{outcome}', "
-                    f"{motivation_value});"
+                    f"'{motivation_value}');"
                 )
                 sql_statements.append(sql)
 
@@ -199,8 +199,7 @@ for j in range(100):
                     if motivation is None:
                         motivation_value = 'NULL'
                     else:
-                        motivation_value = f"'{
-                            motivation.replace('\'', '\'\'')}'"
+                        motivation_value = f"{motivation}"
 
                     # Create the SQL statement
                     sql = (
@@ -208,7 +207,7 @@ for j in range(100):
                         f"'{plates[i][0]}', "
                         f"'{revision_date.strftime('%Y-%m-%d')}', "
                         f"'{outcome}', "
-                        f"{motivation_value});"
+                        f"'{motivation_value}');"
                     )
                     sql_statements.append(sql)
     # the vehicle will not have an active plate
@@ -242,7 +241,7 @@ for j in range(100):
                 if motivation is None:
                     motivation_value = 'NULL'
                 else:
-                    motivation_value = f"'{motivation.replace('\'', '\'\'')}'"
+                    motivation_value = f"{motivation}"
 
                 # Create the SQL statement
                 sql = (
@@ -250,7 +249,7 @@ for j in range(100):
                     f"'{plates[i][0]}', "
                     f"'{revision_date.strftime('%Y-%m-%d')}', "
                     f"'{outcome}', "
-                    f"{motivation_value});"
+                    f"'{motivation_value}');"
                 )
                 sql_statements.append(sql)
         else:
