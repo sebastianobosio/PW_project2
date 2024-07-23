@@ -25,6 +25,8 @@ Una volta aperto recarsi alla sezione *DATABASE* e modifare *USER* e *PASSWORD*
 con le proprie con le quali avete creato il database.
 
 ## Eseguire l'applicazione
-Per eseguire l'applicazione recarsi in *PW_project2/django_app/* ed eseguire il comando
+Per eseguire l'applicazione recarsi in *PW_project2/django_app/* ed eseguire i seguenti comandi
+```python manage.py makemigrations```
+```python manage.py migrate```
 ```python manage.py runserver```
 Poi andare al *127.0.0.1:8000/vehicle-revisions* con un browser qualsiasi.
