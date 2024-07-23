@@ -1,5 +1,6 @@
 import random
 from datetime import datetime, timedelta
+import os
 
 motivation_list = [
     "Veicolo non superato il test delle emissioni",
@@ -165,7 +166,6 @@ for j in range(100):
                 )
                 sql_statements.append(sql)
 
-
         # The other plates will be inactive
         for i in range(1, len(plates)):
             # here is a bit difficult because names. The previous_emission_date is in fact the next_emission_date
@@ -190,6 +190,7 @@ for j in range(100):
                         except ValueError:
                             print("ciao")
                             pass
+                    outcome = random.choice(['positive', 'negative'])
                     if outcome == 'negative':
                         motivation = random.choice(motivation_list)
                     else:
@@ -198,7 +199,8 @@ for j in range(100):
                     if motivation is None:
                         motivation_value = 'NULL'
                     else:
-                        motivation_value = f"'{motivation.replace('\'', '\'\'')}'"
+                        motivation_value = f"'{
+                            motivation.replace('\'', '\'\'')}'"
 
                     # Create the SQL statement
                     sql = (
@@ -231,6 +233,7 @@ for j in range(100):
                     except ValueError:
                         print("ciao")
                         pass
+                outcome = random.choice(['positive', 'negative'])
                 if outcome == 'negative':
                     motivation = random.choice(motivation_list)
                 else:
@@ -253,8 +256,12 @@ for j in range(100):
         else:
             pass  # No plates for this vehicle
 
+
+current_directory = os.path.dirname(os.path.abspath(__file__))
+target_file_path = os.path.join(current_directory, '..', 'db', 'vehicle_database.sql')
+target_file_path = os.path.abspath(target_file_path)
 # Write SQL statements to a file
-with open('../db/vehicle_database.sql', 'w') as f:
+with open(target_file_path, 'w') as f:
     for statement in sql_statements:
         f.write(statement + '\n')
 
